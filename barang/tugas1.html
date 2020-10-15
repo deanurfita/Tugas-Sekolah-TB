@@ -105,8 +105,8 @@
           <div class="container">
             <h3 class="text-center">Input Data Produk</h3>
             <div class="form-group">
-                <label for="kode">Nama Pelanggan</label>
-                <input type="text" class="form-control" id="id_nama">
+                <label for="kode">Kode Produk</label>
+                <input type="text" class="form-control" id="id_kode">
             
             <div class="form-group">
                 <label for="nama">Nama Produk</label>
@@ -115,25 +115,55 @@
             <div class="form-group">
                 <label for="harga">Harga Produk</label>
                 <input type="text" class="form-control" id="id_harga">
-  
+    
+                <label for="satuan">angka pembelian</label>
+                <select class="form-control" id="id_satuan">
+                    <option value="satuan">satuan</option>
+                    <option value="(>10 >15)">(> 10 < 15)</option>
+                    <option value="(>15)">(<15)</option>
+                </select>
+    
                 <label for="kategori">Kategori</label>
                 <select class="form-control" id="id_kategori">
-                    <option value="peralatan kopi dan teh">Peralatan kopi dan teh</option>
-                    <option value="sofa">Sofa</option>
-                    <option value="lampu meja">Lampu meja</option>
-                    <option value="dekorasi hiasan">Dekorasi Hiasan</option>
+                    <option value="sofa">sofa</option>
+                    <option value="dekorasi hiasan">dekorasi hiasan</option>
+                    <option value="lilin aroma">lilin aroma</option>
+                    <option value="lampu meja">lampu meja</option>
+                    <option value="meja makan">meja makan</option>
+                    <option value="perlengkapan dapur">perlengkapan dapur</option>
                 </select>
-                
-                <div class="form-group">
-                    <label for="gambar">URL Gambar</label>
-                    <input type="url" class="form-control" id="url_produk">
-                
+                               
             <div class="form-group">
                 <label for="stok">Stok Produk</label>
                 <input type="text" class="form-control" id="id_stok">
-    
+             
+            <div class="form-group">
+                <label for="stok">harga total</label>
+               
+                <input type="text" class="form-control" id="id_hatot">   
+
+                    
+                <script>
+                  function hitungtotal(){
+                  var total = 0;
+                  var harga = $("#id_harga").val();
+                  var jumlah = $("#id_stock").val();
+                  var disc = 0;
+                  
+                  if(jumlah == "" && harga ==""){
+                    disc = 0;
+                  }else if(jumlah >= 1){
+                    disc = 0.10*harga;
+                  }else{
+                    disc =0;
+                  }
+                  total = harga*jumlah;
+                  var hargatotal = total-disc;
+                  $("#id_hatot").val(hargatotal);
+                }
+                </script>
                 
-                <button class="btn btn-primary mt-2" onclick="add()">Simpan</button>
+                <button type="button" class="btn btn-primary mt-2" onclick="add()">Simpan</button>
                 
             <table class="table">
                 <thead>
@@ -143,8 +173,8 @@
                         <th scope="col">Harga Produk</th>
                         <th scope="col">Satuan</th>
                         <th scope="col">Kategori</th>
-                        <th scope="col">Gambar</th>
-                        <th scope="col">Stok Produk</th>
+                        <th scope="col">stok Produk</th>
+                        <th scope="col">total harga</th>
                         <th scope="col">Keterangan</th>
                     </tr>
                 </thead>
@@ -179,9 +209,9 @@
     
                                 <label for="satuan">Satuan</label>
                                 <select class="form-control" id="modalsatuan">
-                                    <option value="Gelas">Gelas</option>
-                                    <option value="Botol">Botol</option>
-                                    <option value="Karton">Kemasan</option>
+                                    <option value="Gelas">satuan</option>
+                                    <option value="Botol">(>10)<15)</option>
+                                    <option value="Karton">(>15)></option>
                                 </select>
     
                                 <label for="kategori">Kategori</label>
@@ -191,22 +221,21 @@
                                     <option value="Ciki">makanan Kemasan</option>
                                 </select>
     
-                                <div class ="form-group">
-                                <label for="gambar">URL Gambar</label>
-                                <input class="text" class="form-control" id="modalgambar">
-    
                                 <div class="form-group">
                                 <label for="stok">Stok Produk</label>
                                 <input type="text" class="form-control" id="modalstok">
-    
+
+                                <div class="form-group">
+                                  <label for="stok">harga total</label>
+                                  <input type="text" class="form-control" id="modalhatot">
                             </div>
+
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
                                 <button type="button" class="btn btn-primary" onclick="simpanedit()" data-dismiss="modal">Simpan</button>
                             </div>
                         </div>
                     </div>
-                </div>
             </div>
     
         <script>
@@ -215,8 +244,8 @@
             var harga = []
             var satuan = []
             var kategori = []
-            var url = []
             var stok = []
+            var hatot = []
             
             var tampil = document.getElementById('tampildata')
     
@@ -224,7 +253,7 @@
                 tampil.innerHTML = ""
     
                 for(i = 0; i < namaproduk.length; i++){
-                    var totalstok = document.getElementById('id_stok').value 
+                    var harg = document.getElementById('id_stok').value 
     
                     totalstok = stok[i]
                     if (totalstok < 5) {
@@ -232,6 +261,7 @@
                     } else {
                         var bg ="";
                     }
+  
                 
                     tampil.innerHTML += "<tr>"+
                             "<td>"+kodeproduk[i]+"</td>"+
@@ -239,8 +269,8 @@
                             "<td>"+harga[i]+"</td>"+
                             "<td>"+satuan[i]+"</td>"+
                             "<td>"+kategori[i]+"</td>"+
-                            "<td>" +"<img src="+url[i]+" style='width: 120px; height: 70px;' alt='ini gambar'>"+"</td>" +
-                            "<td class="+bg+">"+stok[i]+"</td>"+
+                            "<td>"+stok[i]+"</td>"+
+                            "<td>"+hatot[i]+"</td>"+
                             "<td>"+
                             "<button class='btn btn-warning pr-3' data-toggle='modal' data-target='#modal' onclick='editdata(" + i +")'>Edit</button>" +
                             "<button class='btn btn-danger' href='#' onclick ='hapus(" + i + ")'>Hapus</button>"+
@@ -248,7 +278,7 @@
                         "</tr>"
                 }
             }
-    
+     
     
     function data() {
                         document.getElementById('id_kode').value=document.getElementById('kodeproduk').value
@@ -256,8 +286,8 @@
                         document.getElementById('id_harga').value=document.getElementById('harga').value
                         document.getElementById('id_satuan').value=document.getElementById('satuan').value
                         document.getElementById('id_kategori').value=document.getElementById('kategori').value
-                        document.getElementById('url_produk').value=document.getElementById('gambar').value
                         document.getElementById('id_stok').value=document.getElementById('stok').value
+                        document.getElementById('id_total').value=document.getElementById('hatot').value
     
                         show()
             }
@@ -268,16 +298,17 @@
                 var hrgproduk = document.getElementById('id_harga').value
                 var satuanbaru = document.getElementById('id_satuan').value
                 var kategoribaru = document.getElementById('id_kategori').value
-                var gambarbaru = document.getElementById('url_produk').value
                 var stokbaru = document.getElementById('id_stok').value
+                var totalbaru = document.getElementById('id_hatot').value
     
                 kodeproduk.push(kdproduk)
                 namaproduk.push(nama)
                 harga.push(hrgproduk)
                 satuan.push(satuanbaru)
                 kategori.push(kategoribaru)
-                url.push(gambarbaru)
                 stok.push(stokbaru)
+                hatot.push(totalbaru)
+  
     
                 show()
             }
@@ -289,8 +320,8 @@
                     harga.splice(i,1)
                     satuan.splice(i,1)
                     kategori.splice(i,1)
-                    url.splice(i,1)
                     stok.splice(i,1)
+                    hatot.splice(i,1)
                     
                     show()
                 } else {
@@ -304,8 +335,8 @@
                 document.getElementById('modalharga').value = harga[i]
                 document.getElementById('modalsatuan').value = satuan[i]
                 document.getElementById('modalkategori').value = kategori[i]
-                document.getElementById('modalgambar').value = url[i]
                 document.getElementById('modalstok').value = stok[i]
+                document.getElementById('modalhatot').value = hatot[i]
                 index.push(i)
             }
     
@@ -315,8 +346,8 @@
                 var hargabaru = document.getElementById('modalharga').value
                 var satuanbaru = document.getElementById('modalsatuan').value
                 var kategoribaru = document.getElementById('modalkategori').value
-                var urlbaru = document.getElementById('modalgambar').value
                 var stokbaru = document.getElementById('modalstok').value 
+                var hatotbaru = document.getElementById('modalhatot').value
     
                 if(kodebaru =='') {
                     alert('anda belum memasukan data')
@@ -326,8 +357,8 @@
                     harga[index] = hargabaru
                     satuan[index] = satuanbaru
                     kategori[index] = kategoribaru
-                    url[index] = urlbaru
                     stok[index] = stokbaru
+                    hatot[index] = hatotbaru
     
                     show()
                     index.pop()
